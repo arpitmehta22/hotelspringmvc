@@ -28,21 +28,21 @@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 					 <form:form action="addproduct" method="post"  modelAttribute="product">
             <table border="0" align="center">
                 <tr>
-                    <td colspan="2" align="center"><h2> Room details </h2></td>
+                    <td colspan="2" align="center"><h2> add product details </h2></td>
                 </tr>
                 <tr>
                     <td>Name:</td>
-                    <td><form:input path="name"  /></td>
+                    <td><form:input path="name" required="required" /></td>
                        <td>Desc:</td>
-                    <td><form:input path="description"  /></td>
+                    <td><form:input path="description" required="required"  /></td>
                        <td>price:</td>
-                    <td><form:input path="price" type="number" /></td>
+                    <td><form:input path="price" type="number" required="required" /></td>
                       
                        <td>quantity:</td>
-                    <td><form:input path="quantity" type="number" /></td>
+                    <td><form:input path="quantity" type="number" required="required" /></td>
                     <tr>
                         <td>current incharge:</td>
-                    <td><form:input path="current_incharge" /></td>
+                    <td><form:input path="current_incharge"  /></td>
                     </tr>
                    <tr>
                    
@@ -142,5 +142,8 @@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 					
 					
 					</div>
+					<div id="footer">
+    <jsp:include page="include/footer.jsp" />
+</div>
 </body>
 </html>

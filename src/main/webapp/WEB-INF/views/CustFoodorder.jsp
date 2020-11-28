@@ -74,19 +74,20 @@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
                 </tr>
              <tr>
                     <td> Room No:</td>
-                    <td><form:select path="room_id" name="room_id" required>
-                        <c:forEach items="${rooms}" var="room">
+              
+                    <td><select path="room_id" name="room_id" required>
+                        <c:forEach items="${roominfo}" var="room">
    
-                    <form:option value="${room.room_no}"/>
+                    <option value="${room.ROOM_ID}">  ${room.ROOM_ID}  </option>
                     </c:forEach>
                    
-                   </form:select> 
+                   </select> 
                     
                     </td>
                   
                 </tr>
                  
-                </tr><input  type="hidden" path="total" name="total" value="${total}"  /></td>
+                <input  type="hidden" path="total" name="total" value="${total}"  /></td>
                 
                 <tr>
                     <td colspan="2" align="center"><input type="submit" name="pay" path="pay" value="pay_now" /></td>
@@ -98,7 +99,9 @@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 			</c:if>	
 		
 			
-		
+		<div id="footer">
+    <jsp:include page="include/footer.jsp" />
+</div>
 
 </body>
 </html>

@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.example.demo.DAO.Bankdetail_DAO;
 import com.example.demo.DAO.Bill_DAO;
 import com.example.demo.DAO.BookingDAO;
 import com.example.demo.DAO.Coupan_DAO;
@@ -28,9 +29,13 @@ import com.example.demo.DAO.RoomDAO;
 import com.example.demo.DAO.Room_ServiceDAO;
 import com.example.demo.DAO.Salary_DAO;
 import com.example.demo.DAO.UserDAO;
+import com.example.demo.models.Bank_Details;
 import com.example.demo.models.Bill;
 import com.example.demo.models.Booking;
 import com.example.demo.models.Coupon;
+import com.example.demo.models.Customer;
+import com.example.demo.models.Customer_email;
+import com.example.demo.models.Customer_phone;
 import com.example.demo.models.Employee;
 import com.example.demo.models.Employee_email;
 import com.example.demo.models.Employee_phone;
@@ -53,6 +58,8 @@ public class AdminController {
 	private EmployeeDAO employeedao;
 	@Autowired
 	private UserService userservice;
+	@Autowired
+	private Bankdetail_DAO bankdetaildao;
 	
 	@Autowired
 	private SecurityService securityService;
@@ -135,8 +142,10 @@ public class AdminController {
 	@RequestMapping(value={"booking/"},method=RequestMethod.GET)
 	public String BookingRoom(ModelMap m,HttpSession session)
 	{
-		List<Booking> bookings= bookingdao.getallBookings();
+		List<Booking> bookings= bookingdao.getactiveBookingByDate(new Date(System.currentTimeMillis()));
 		m.addAttribute("bookings",bookings);
+		List<Room> rooms=roomdao.getRoomByavaiability("booked");
+		m.addAttribute("bookedroom", rooms);
 		
 		return "AdminBookingboard";		
 		
@@ -205,7 +214,7 @@ public class AdminController {
 		System.out.println(bookingdetail.getBooking_id());
 		
 		
-		bookingdao.setRoomNoforBooking(bookingdetail.getBooking_id(),room_id);
+		bookingdao.setRoomNoforBooking(bookingdetail.getBooking_id(),room_id,bookingdetail.getCustomer_id());
 
 		List<Room> rooms=roomdao.getAllRoomsBybookingId(bookingdetail.getBooking_id());
 		List<Room> free_rooms=roomdao.getRoomByavaiability("free");
@@ -237,7 +246,7 @@ public class AdminController {
 	
 
 	
-	@RequestMapping(value={"booking/findbydate"},method=RequestMethod.POST)
+	@RequestMapping(value={"booking/findbydate"},method=RequestMethod.GET)
 	public String BookingRoombydate(@RequestParam("date") Date date,ModelMap m,HttpSession session)
 	{
 		List<Booking> bookings= bookingdao.getBookingByStartDate(date);
@@ -248,7 +257,7 @@ public class AdminController {
 		
 	}
 	
-	@RequestMapping(value={"booking/findbyRoomNo"},method=RequestMethod.POST)
+	@RequestMapping(value={"booking/findbyRoomNo"},method=RequestMethod.GET)
 	public String BookingRoombyroom(@RequestParam("room_id") String room_id,ModelMap m,HttpSession session)
 	{
 		List<Booking> bookings=new ArrayList<Booking>();
@@ -259,11 +268,24 @@ public class AdminController {
 		return "AdminBookingboard";		
 		
 	}
-	@RequestMapping(value={"booking/findbyID"},method=RequestMethod.POST)
+	@RequestMapping(value={"booking/findbyID"},method=RequestMethod.GET)
 	public String BookingRoombyid(@RequestParam("booking_id") String booking_id,ModelMap m,HttpSession session)
 	{
 		List<Booking> bookings=new ArrayList<Booking>();
  	    bookings.add(bookingdao.getBookingById(booking_id));
+	
+		
+		
+		m.addAttribute("bookings",bookings);
+		
+		return "AdminBookingboard";		
+		
+	}
+	@RequestMapping(value={"booking/findbycust"},method=RequestMethod.GET)
+	public String BookingRoombycust(@RequestParam("cust_id") String cust_id,ModelMap m,HttpSession session)
+	{
+		List<Booking> bookings=new ArrayList<Booking>();
+ 	    bookings=(bookingdao.getBookingByCustomer(cust_id));
 	
 		
 		
@@ -339,8 +361,8 @@ public class AdminController {
 		User user = new User();
 		System.out.println(employee.getRole());
 		
-//		try {
-//		
+		try {
+		
 			
 			user.setUsername(employee.getEmployee_id());
 			user.setRole(employee.getRole());
@@ -356,13 +378,13 @@ public class AdminController {
 
 	   
 	    
-//		}
-//		catch(Exception e) {
-//			m.addAttribute("message","Username already exists");
-//			
-//			
-//			
-//		}
+		}
+	catch(Exception e) {
+			m.addAttribute("message","Username already exists");
+			
+			
+			
+		}
 	
 		
 		m.addAttribute("employeedetail",new Employee());
@@ -458,10 +480,26 @@ public String SalaryReciept(@PathVariable("id") String id,ModelMap m,HttpSession
 @RequestMapping(value={"/profile"},method=RequestMethod.GET)
 public String Profile(ModelMap m,HttpSession session,Principal principal)
 {	String id=principal.getName();
-	System.out.println(id);
+
 	Employee emp= employeedao.getEmployeeById(id);
 	List<Employee_email> emails= employeedao.getallemails(id);
 	List<Employee_phone> nums = employeedao.getallnums(id);
+	String bank_id=emp.getBank_reference_no();
+	
+	if(bank_id==(null))
+	{	System.out.println(id);
+		Bank_Details bank= new Bank_Details();
+		bank.setBank_id(null);
+		m.addAttribute("bankdetail",bank);
+		
+		
+	}
+	else
+	{
+		Bank_Details bank1=bankdetaildao.getBankByID(bank_id);
+		m.addAttribute("bankdetail",bank1);
+	}
+		
 	
 	
 	m.addAttribute("emails",emails);
@@ -472,7 +510,73 @@ public String Profile(ModelMap m,HttpSession session,Principal principal)
 	return "Profile";				
 	
 }
+@RequestMapping(value={"/custprofile"},method=RequestMethod.GET)
+public String custProfile(@RequestParam("cust") String cust1,ModelMap m,HttpSession session,Principal principal)
+{	String id=cust1;
+Customer cust= customerdao.getCustomer(id);
+if(cust==null)
+{
+    m.addAttribute("message","no such customer");
+			return "redirect:/admin/";	
+}
+System.out.println(principal.getName());
+List<Customer_email> emails= customerdao.getallemails(cust.getCust_ID());
+	List<Customer_phone> nums = customerdao.getallnum(cust.getCust_ID());
+	
+	String bank_id=cust.getBank_Ref_No();
+	
+	if(bank_id==(null))
+	{
+		Bank_Details bank= new Bank_Details();
+		m.addAttribute("bankdetail",bank);
+		
+		
+	}
+	else
+	{
+		Bank_Details bank1=bankdetaildao.getBankByID(bank_id);
+		System.out.println(bank1.getAccount_Number());
+		m.addAttribute("bankdetail",bank1);
+	}
+		
+	
+	
+	m.addAttribute("emails",emails);
+	m.addAttribute("nums",nums);
 
+   m.addAttribute("profile",cust);
+
+	m.addAttribute("foreign","true");
+	
+	return "Profile";				
+	
+}
+@RequestMapping(value={"profile/bankdetail"},method=RequestMethod.POST)
+public String addbank(@ModelAttribute("bankdetail") Bank_Details bank,ModelMap m,HttpSession session,Principal principal)
+{	String id=principal.getName();
+	
+
+    if(bank.getBank_id()==null)
+	{
+	    bank.setBank_id(bank.getBank_Name()+'_'+bank.getAccount_Number());
+	    try {
+		bankdetaildao.save(bank);
+	    } catch(Exception e)
+	    {
+	    	
+	    }
+	    System.out.println("bye"+id);
+	   employeedao.updatebank(id, bank.getBank_id());
+	}
+	else {System.out.println("hello"+id);
+		bankdetaildao.update(bank);
+	
+	} 
+ 
+	  
+	return "redirect:/admin/profile";				
+	
+}
 @RequestMapping(value={"/profile"},method=RequestMethod.POST)
 public String saveProfile(@ModelAttribute("profile") Employee emp,ModelMap m,HttpSession session,Principal principal)
 {	String id=principal.getName();

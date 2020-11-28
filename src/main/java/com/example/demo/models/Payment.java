@@ -23,6 +23,7 @@ public class Payment {
 	public Payment() {
 		this.type="credit";
 		this.status="initiated";
+		this.Bill_no= null;
 	
 	}
 	

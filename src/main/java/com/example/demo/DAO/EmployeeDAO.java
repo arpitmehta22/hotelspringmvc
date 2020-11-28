@@ -43,6 +43,12 @@ public class EmployeeDAO {
 		return template.update(sql);
 		   
 	   }
+	   public int updatebank(String cust,String bank)
+	   {
+		   String sql= "update Employee set Bank_Ref_No = '"+bank+"' where Employee_ID='"+cust+"';";
+		return template.update(sql);
+		   
+	   }
 	  public int delete(int id){  
 		    String sql="delete from Employee where employee_Id ="+id+"";  
 		    return template.update(sql);  
@@ -51,7 +57,10 @@ public class EmployeeDAO {
 	  
 	  public Employee getEmployeeById(String id){  
 		    String sql="select * from Employee where employee_id='"+id+"';";  
+		    List <Employee> emps= getEmpbySQL(sql);
+		    if(emps.size()!=0)
 		    return getEmpbySQL(sql).get(0);
+		    else return null;
 		}  
 	  
 	  public List<Employee> getEmpbySQL(String sql){  
@@ -63,6 +72,7 @@ public class EmployeeDAO {
 		                e.setLast_name(rs.getString("last_name"));
 		                e.setHouse_no(rs.getString("House_No"));
 		                e.setDOB(rs.getDate("DOB"));
+		                e.setBank_reference_no(rs.getString("Bank_Ref_No"));
 		               
 		                e.setStreet(rs.getString("street"));
 		                e.setCity(rs.getString("city"));
@@ -74,18 +84,7 @@ public class EmployeeDAO {
 	  
 	  
 	  public List<Employee> getallEmployee(){  
-		    return template.query("select * from Employee",new RowMapper<Employee>(){  
-		        public Employee mapRow(ResultSet rs, int row) throws SQLException {  
-		        	Employee e=new Employee();  
-		        	 e.setEmployee_id(rs.getString("employee_id"));
-		                e.setFirst_name(rs.getString("first_name"));
-		                e.setLast_name(rs.getString("last_name"));
-		                e.setStreet(rs.getString("street"));
-		                e.setCity(rs.getString("city"));
-		                e.setPincode(rs.getInt("pincode"));
-		            return e;  
-		        }  
-		    });  
+		    return getEmpbySQL("Select * from Employee;");
 		}  
 
 	   public List<Employee_email> getallemails(String Employee_ID)

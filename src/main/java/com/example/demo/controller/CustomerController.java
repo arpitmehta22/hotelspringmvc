@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.example.demo.DAO.Bankdetail_DAO;
 import com.example.demo.DAO.Bill_DAO;
 import com.example.demo.DAO.BookingDAO;
 import com.example.demo.DAO.Coupan_DAO;
@@ -33,6 +34,7 @@ import com.example.demo.DAO.RoomDAO;
 import com.example.demo.DAO.Room_ServiceDAO;
 import com.example.demo.DAO.Salary_DAO;
 import com.example.demo.DAO.UserDAO;
+import com.example.demo.models.Bank_Details;
 import com.example.demo.models.Booking;
 import com.example.demo.models.Customer;
 import com.example.demo.models.Customer_email;
@@ -61,6 +63,8 @@ public class CustomerController {
 	private BookingDAO bookingdao;
 	@Autowired
 	private RoomDAO roomdao;
+	@Autowired
+	private Bankdetail_DAO bankdetaildao;
 	@Autowired
 	private Bill_DAO billdao;
 	@Autowired
@@ -150,6 +154,23 @@ public class CustomerController {
 		 List<Customer_email> emails= customerdao.getallemails(cust.getCust_ID());
 			List<Customer_phone> nums = customerdao.getallnum(cust.getCust_ID());
 			
+			String bank_id=cust.getBank_Ref_No();
+			
+			if(bank_id==(null))
+			{
+				Bank_Details bank= new Bank_Details();
+				m.addAttribute("bankdetail",bank);
+				
+				
+			}
+			else
+			{
+				Bank_Details bank1=bankdetaildao.getBankByID(bank_id);
+				System.out.println(bank1.getAccount_Number());
+				m.addAttribute("bankdetail",bank1);
+			}
+				
+			
 			
 			m.addAttribute("emails",emails);
 			m.addAttribute("nums",nums);
@@ -158,6 +179,24 @@ public class CustomerController {
 		
 		return "Profile";
 	}
+	@RequestMapping(value={"profile/bankdetail"},method=RequestMethod.POST)
+	public String addbank(@ModelAttribute("bankdetail") Bank_Details bank,ModelMap m,HttpSession session,Principal principal)
+	{	String id=principal.getName();
+	if(bank.getBank_id()==null)
+	{
+		System.out.println("new");
+		bank.setBank_id(bank.getBank_Name()+'_'+bank.getAccount_Number());
+		bankdetaildao.save(bank);
+     	customerdao.updatebank(id, bank.getBank_id());
+	}
+	else {
+		bankdetaildao.update(bank);
+
+	}
+		return "redirect:/customer/profile";				
+		
+	}
+	
 	@RequestMapping(value={"profile/addnum"},method=RequestMethod.POST)
 	public String addnumprofile(@RequestParam("number") String num,ModelMap m,HttpSession session,Principal principal)
 	{	String id=principal.getName();

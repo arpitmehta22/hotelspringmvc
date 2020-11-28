@@ -29,9 +29,9 @@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
                     <td> Room No:</td>
                     <td>
                     <form:select path="ROOM_ID" >
-                        <c:forEach items="${rooms}" var="room">
+                        <c:forEach items="${roominfo}" var="room">
    
-                    <form:option value="${room.room_no}"/>
+                    <form:option value="${room.ROOM_ID}"/>
                     </c:forEach>
                    
                    </form:select> 
@@ -50,5 +50,8 @@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
         <h4>${response}</h4>
         </c:if>
     </div>
+    <div id="footer">
+    <jsp:include page="include/footer.jsp" />
+</div>
 </body>
 </html>

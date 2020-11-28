@@ -6,6 +6,34 @@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<style>
+.alert {
+  opacity: 1;
+  transition: opacity 0.6s; /* 600ms to fade out */
+}
+</style>
+
+<script>
+// Get all elements with class="closebtn"
+var close = document.getElementsByClassName("closebtn");
+var i;
+
+// Loop through all close buttons
+for (i = 0; i < close.length; i++) {
+  // When someone clicks on a close button
+  close[i].onclick = function(){
+
+    // Get the parent of <span class="closebtn"> (<div class="alert">)
+    var div = this.parentElement;
+
+    // Set the opacity of div to 0 (transparent)
+    div.style.opacity = "0";
+
+    // Hide the div after 600ms (the same amount of milliseconds it takes to fade out)
+    setTimeout(function(){ div.style.display = "none"; }, 600);
+  }
+}
+</script>
 </head>
 <body>
 <div id="header">
@@ -14,8 +42,9 @@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <div class="container">
 
    				 <h1>Available Rooms</h1>
-   				
+   		<div class="row">	
      <c:forEach items="${rooms}" var="room">
+     	<div class="card">
    				 <table>
    				
 			        <tr>
@@ -33,9 +62,14 @@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 			            <td><p>${room.price}</p></td>
 			        </tr>
 			    </table>
-			
+			     <img src="/Images/${room.photo_url }" />
+  
+			</div>
 				</c:forEach>
-	
+	</div>	
+</div>
+<div class="container">	
+	<div class="jumbotron">
 	  <h2>Your rooms :)</h2>
 	     <c:forEach items="${rooms_list}" var="room">
    				 <table>
@@ -52,8 +86,16 @@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 			  
 				</c:forEach>
 				</div>
-	
+			
+	</div>
+	<br>
 	<div class="container">
+	<c:if test="${not empty fullm}">
+	<div class="alert">
+  <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                        <Strong>${fullm }</Strong>
+   </div>
+   </c:if>
 	<div class="card">
 	<form:form action="addroom" method="post" modelAttribute="roombook">
 	<h2>Please add rooms here!!</h2>
@@ -62,7 +104,7 @@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
                
                     <td>priviledge_level:</td>
                     
-                 <td>   <form:select path="priviledge_level">
+                 <td>   <form:select path="priviledge_level" >
                       <c:forEach items="${rooms}" var="room">
    
                     <form:option path="priviledge_level" type="number" value="${room.priviledge_level}"/>
@@ -73,7 +115,7 @@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
                
                 <tr>
                     <td>count::</td>
-                    <td><form:input path="count" /></td>
+                    <td><form:input path="count" min="0" required="required" /></td>
                 </tr>                     
                 <tr>
                     <td colspan="2" align="center"><input type="submit" value="add room"></input></td>
@@ -106,5 +148,9 @@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
         </form:form>
         </div>
         </div>
+        <div id="footer">
+    <jsp:include page="include/footer.jsp" />
+</div>
 </body>
+
 </html>

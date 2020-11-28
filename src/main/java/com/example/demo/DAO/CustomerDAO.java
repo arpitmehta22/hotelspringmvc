@@ -38,11 +38,21 @@ public class CustomerDAO {
 		return template.update(sql);
 		   
 	   }
+	   public int updatebank(String cust,String bank)
+	   {
+		   String sql= "update Customer set Bank_Ref_No='"+bank+"' where Cust_ID='"+cust+"';";
+		return template.update(sql);
+		   
+	   }
+	  
 	   public Customer getCustomer(String id){
 	    
 
 		    String sql="select * from Customer where cust_id='"+id+"';";  
-		   return getCustbysql(sql).get(0);
+		  List<Customer> custs= getCustbysql(sql);
+		  if(custs.size()==0)
+			  return null;
+		  else return custs.get(0);
 	    }
 	   public List<Customer> getCustbysql(String sql){
 	        
@@ -58,6 +68,7 @@ public class CustomerDAO {
 	                e.setStreet(rs.getString("street"));
 	                e.setCity(rs.getString("city"));
 	                e.setPincode(rs.getInt("pincode"));
+	                e.setBank_Ref_No(rs.getString("Bank_Ref_No"));
 	                return e;
 	            }
 	        });

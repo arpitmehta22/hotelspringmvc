@@ -18,7 +18,7 @@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
    				 <hr>
    				
      <c:forEach items="${bookings}" var="booking">
-     <a href="invoice/${booking.booking_id }">
+    
      <div class="card">
    				 <table align="center">
    				
@@ -42,14 +42,17 @@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 			            <td><p>${booking.no_of_members}</p></td>
 			        </tr>
 			    </table>
-			    
+			     <a href="invoice/${booking.booking_id }">
 				<p>	Invoices</p>
+					</a>
 			    <hr>
 			</div>
-			</a>
+		
 				</c:forEach>
 	
-	
+	<div id="footer">
+    <jsp:include page="include/footer.jsp" />
+</div>
 	
 
 </body>

@@ -58,6 +58,8 @@ public class BookingController {
 	public String getdates(Model m,HttpSession session)
 	{
 		Booking bd= new Booking();
+
+		m.addAttribute("today",new Date(System.currentTimeMillis()));
 		m.addAttribute("bookdetail",bd );
 	
 		
@@ -73,6 +75,7 @@ public class BookingController {
 	
 		
 		
+		model.addAttribute("today",new Date(System.currentTimeMillis()));
 		model.addAttribute("rooms",rooms);
 		model.addAttribute("roombook",new Room_booking());
 		model.addAttribute("bookdetail",bd);
@@ -96,8 +99,21 @@ public class BookingController {
 		room.setBooking_id(bookdetail.getBooking_id());
 		room.setStart_date(bookdetail.getStart_date());
 		room.setEnd_date(bookdetail.getEnd_date());
+		int i=0;
+		for(i=0;i<rooms.size();i++)
+		{
+			if(rooms.get(i).getTotal_count()<bookdetail.roomcount(room.getPriviledge_level())+room.getCount()&&rooms.get(i).getPriviledge_level()==room.getPriviledge_level())
+			{
+				model.addAttribute("fullm", "Sorry ! We cannot proceed your request");
+				break;
+				
+			
+			}
+		}
+		if(i==rooms.size())
 		
 		bookdetail.addRooms(room);
+		
 		
 		
 		model.addAttribute("rooms_list",bookdetail.getRooms());

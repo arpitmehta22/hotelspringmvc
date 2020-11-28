@@ -16,19 +16,19 @@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 </div>
 
 <h1 align="center"> Customer Dashboard</h1>
- <div align="center">
-    <h1>UserName : ${user.username}</h1>
+ <div align="center" class="jumbotron" >
+    <h1 class="display-4">UserName : ${user.username}</h1>
     </div>
  <div class="jumbotron">
  
-<a href="profile"><h2> Profile </h2></a>
+<a href="profile"><div class="card" ><h2> Profile </h2> </div></a>
  
-<a href="booking/"><h2> Book Your Stay here!! </h2></a>
+<a href="booking/"><div class="card" ><h2> Book Your Stay here!! </h2></div></a>
 
-<a href="bookinghistory"><h2> Booking History!! </h2></a>
+<a href="bookinghistory"> <div class="card" > <h2> Booking History!! </h2></div></a>
 
-<a href="room_s/create/"><h2> Create Room Service Request!! </h2></a>
-<a href="foodorder/"><h2> Foody Area!! </h2></a>
+<a href="room_s/create/"> <div class="card" ><h2> Create Room Service Request!! </h2></div></a>
+<a href="foodorder/"> <div class="card" ><h2> Foody Area!! </h2></div></a>
 
 
 </div>
@@ -42,9 +42,9 @@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 	 	 
 	 	 
 	 	 
-	 	 
+	 	 <div class="container">
 	 <div class="jumbotron" align="center">
-	 
+	 <div class="card">
 	    <form:form action="add_feedback" method="post" modelAttribute="feedback_detail">
             <table border="0">
                 <tr>
@@ -87,10 +87,13 @@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
                 </tr>
             </table>
         </form:form>
-
+</div>
+	</div>
 	</div>
 
-
+<div id="footer">
+    <jsp:include page="include/footer.jsp" />
+</div>
 
 </body>
 </html>
