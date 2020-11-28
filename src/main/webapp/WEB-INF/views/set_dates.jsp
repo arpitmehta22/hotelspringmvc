@@ -7,30 +7,40 @@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<script>
+function validateForm() {
+	  var x = document.forms["myForm"]["start_date"].value;
+
+	  var y = document.forms["myForm"]["end_date"].value;
+	  if (x >=y) {
+	    alert("end date must be greater than start date");
+	    return false;
+	  }
+	}
+</script>
 </head>
 <body>
 <div id="header">
     <jsp:include page="include/header.jsp" />
 </div>
 
-<h1>welcome to registration page</h1>
 <div align="center">
 
-        <form:form action="set_dates" method="post" modelAttribute="bookdetail" >
+        <form:form  name="myForm" action="set_dates" method="post" modelAttribute="bookdetail"  onsubmit="return validateForm()">
             <table border="0">
                 <tr>
-                    <td colspan="2" align="center"><h2>Spring MVC Form Demo - Registration</h2></td>
+                    <td colspan="2" align="center"><h2>Please Enter the required dates</h2></td>
                 </tr>
               
                  <tr>
                     <td>Start date:</td>
-                    <td><form:input type="date" path="start_date" /></td>
+                    <td><form:input type="date" name="start_date" path="start_date" id="startdate" min="${today}" required="required"/></td>
                 </tr>
                
              
                  <tr>
                     <td>end date:</td>
-                    <td><form:input type="date" path="end_date" /></td>
+                    <td><form:input type="date" name ="end_date" path="end_date" id="enddate"  min="${today}" required="required"/></td>
                 </tr>
                
                
@@ -41,5 +51,8 @@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
             </table>
         </form:form>
     </div>
+    <div id="footer">
+    <jsp:include page="include/footer.jsp" />
+</div>
 </body>
 </html>

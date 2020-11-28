@@ -12,6 +12,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.demo.models.Allotment_list;
 import com.example.demo.models.Room;
 import com.example.demo.models.Room_type;
 @Transactional
@@ -99,12 +100,36 @@ public class RoomDAO {
         });
 		
 	}
+	public List<Allotment_list> getallroomlistbysql(String sql) {
+	
+        
+		return template.query(sql, new RowMapper<Allotment_list>() {
+            @Override
+            public Allotment_list mapRow(ResultSet rs, int i) throws SQLException {
+            	Allotment_list e=new Allotment_list();
+            	e.setCust_ID(rs.getString("Cust_ID"));
+            	e.setROOM_ID(rs.getString("ROOM_ID"));
+            
+               
+                return e;
+            }
+        });
+		
+	}
 	public Integer getpricebyRoomType(int priv_lvl)
 	{
 		String sql = "select price from Room_type where priviledge_level="+priv_lvl;
 		
 
         return template.queryForObject(sql,int.class);
+	}
+	public List<Allotment_list> getroomsbycust_id(String id)
+	{
+		String sql="select * from Allotted_to where cust_id='"+id+"';";
+		return getallroomlistbysql(sql);
+		
+		
+		
 	}
 
 

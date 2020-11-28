@@ -31,7 +31,11 @@ a:link {
 
   color: black;
 }
-
+a:hover{
+	
+  text-decoration: none;
+  color: grey;
+}
 a:visited {
   text-decoration: none;
 }
@@ -57,3 +61,47 @@ a:visited {
 }
 
 /* Add some padding inside the card container */
+
+
+.alert {
+  padding: 20px;
+  background-color: #f44336; /* Red */
+  color: white;
+  margin-bottom: 15px;
+}
+
+/* The close button */
+.closebtn {
+  margin-left: 15px;
+  color: white;
+  font-weight: bold;
+  float: right;
+  font-size: 22px;
+  line-height: 20px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+/* When moving the mouse over the close button */
+.closebtn:hover {
+  color: black;
+}
+
+img {
+  border: 5px solid #ddd;
+  border-radius: 8px;
+  padding: 5px;
+  min-width:400px;
+  max-width: 100%;
+  height:auto;
+
+}
+footer {
+	
+
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  color: white;
+  text-align: center;
+}

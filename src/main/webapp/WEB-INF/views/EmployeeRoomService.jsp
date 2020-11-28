@@ -44,7 +44,9 @@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 			    </table>
 			
 				</c:forEach>
-		
+		<div id="footer">
+    <jsp:include page="include/footer.jsp" />
+</div>
 
 </body>
 </html>

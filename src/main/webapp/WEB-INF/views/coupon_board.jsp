@@ -24,19 +24,19 @@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
                 </tr>
                 <tr>
                     <td>Name :</td>
-                    <td><form:input path="Name" /></td>
+                    <td><form:input path="Name" required="required" /></td>
                 </tr>
                 <tr>
                     <td>Description::</td>
-                    <td><form:input path="Description" /></td>
+                    <td><form:input path="Description" required="required" /></td>
                 </tr>  
                    <tr>
                     <td>Amount :</td>
-                    <td><form:input path="Discount_amount" type="number" /></td>
+                    <td><form:input path="Discount_amount" equired="required" type="number" min="0" /></td>
                 </tr>
                 <tr>
                     <td>Expiry ::</td>
-                    <td><form:input path="Expire_Date"  type="date"/></td>
+                    <td><form:input path="Expire_Date" equired="required"  type="date" min="${today }"/></td>
                 </tr>     
                   <tr>
                     <td>Customer ID (if required) ::</td>
@@ -74,6 +74,8 @@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 </div>
 </div>
 
-
+<div id="footer">
+    <jsp:include page="include/footer.jsp" />
+</div>
 </body>
 </html>

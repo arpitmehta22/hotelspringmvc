@@ -24,7 +24,7 @@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
    	
      <c:forEach items="${bookings}" var="booking">
 
-<div class="column">
+      <div class="column">
       <a href="${pageContext.request.contextPath }/admin/booking/${booking.booking_id}" >
       
    				<div class="card">
@@ -202,28 +202,28 @@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 	
 			<div class="col-sm-3">
 		
-		  <form action="findbydate" method="post" >
+		  <form action="findbydate" method="get" >
             <table border="0" align="center">
                 <tr>
                     <td colspan="2" align="center"><h2> Booking by Date </h2></td>
                 </tr>
                 <tr>
-                    <td>Room No:</td>
-                    <td><input path="date" name="date" type="date"  /></td>
+                    <td> Date:</td>
+                    <td><input path="date" name="date" type="date" required  /></td>
          
                 <tr>
                     <td colspan="2" align="center"><input type="submit"  value="get bookings" /></td>
                 </tr>
             </table>
            </form>	
-           		  <form action="findbycust" method="post" >
+           		  <form action="findbycust" method="get" >
             <table border="0" align="center">
                 <tr>
                     <td colspan="2" align="center"><h2> Booking by Customer ID </h2></td>
                 </tr>
                 <tr>
                     <td> Cust ID :</td>
-                    <td><input path="cust_id" name="cust_id"   /></td>
+                    <td><input path="cust_id" name="cust_id"  required /></td>
          
                 <tr>
                     <td colspan="2" align="center"><input type="submit"  value="get bookings" /></td>
@@ -232,28 +232,34 @@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
            </form>		
            
            
-               <form action="findbyRoomNo" method="post" >
+               <form action="findbyRoomNo" method="get" >
             <table border="0" align="center">
                 <tr>
                     <td colspan="2" align="center"><h2> Booking by Room No</h2></td>
                 </tr>
                 <tr>
-                    <td> Cust ID :</td>
-                    <td><input path="room_id" name="room_id"   /></td>
-         
+                    <td> Room No :</td>
+                     <td><select path="room_id" name="room_id" >
+                        <c:forEach items="${bookedroom}" var="room">
+   
+                    <option value="${room.room_no}"> ${room.room_no}</option>
+                    </c:forEach>
+                   
+                   </select> 
+                   
                 <tr>
                     <td colspan="2" align="center"><input type="submit"  value="get bookings" /></td>
                 </tr>
             </table>
            </form>		
-                <form action="findbyID" method="post" >
+                <form action="findbyID" method="get" >
             <table border="0" align="center">
                 <tr>
-                    <td colspan="2" align="center"><h2> Booking by Room No</h2></td>
+                    <td colspan="2" align="center"><h2> Booking by Booking ID</h2></td>
                 </tr>
                 <tr>
-                    <td> Cust ID :</td>
-                    <td><input path="booking_id" name="booking_id"   /></td>
+                    <td> Booking ID :</td>
+                    <td><input path="booking_id" name="booking_id"  required /></td>
          
                 <tr>
                     <td colspan="2" align="center"><input type="submit"  value="get bookings" /></td>
@@ -267,7 +273,9 @@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 	</div>
 
 		
-			
+	<div id="footer">
+    <jsp:include page="include/footer.jsp" />
+</div>		
 		
 
 </body>

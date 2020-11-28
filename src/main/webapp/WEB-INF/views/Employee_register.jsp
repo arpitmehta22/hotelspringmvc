@@ -13,7 +13,7 @@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
     <jsp:include page="include/header.jsp" />
 </div>
 
-<h1>Employee registration page</h1>
+<h1 align="center">Employee registration page</h1>
 <div align="center">
 <c:if test="${not empty message}">
 <h2> ${message}</h2>
@@ -25,28 +25,28 @@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
         <form:form action="registeremployee" method="post" modelAttribute="employeedetail">
             <table border="0">
                 <tr>
-                    <td colspan="2" align="center"><h2>Spring MVC Form Demo - Registration</h2></td>
+                    <td colspan="2" align="center"><h2>Registration Details</h2></td>
                 </tr>
                 <tr>
                     <td>User Name:</td>
-                    <td><form:input path="employee_id" /></td>
+                    <td><form:input path="employee_id" required="required" /></td>
                 </tr>
                 <tr>
                     <td>Password:</td>
-                    <td><form:password path="password" /></td>
+                    <td><form:password path="password" required="required" /></td>
                 </tr>
                   <tr>
                     <td>First Name:</td>
-                    <td><form:input path="first_name" /></td>
+                    <td><form:input path="first_name" required="required" /></td>
                 </tr>
                
                  <tr>
                     <td>Last_name:</td>
-                    <td><form:input path="last_name" /></td>
+                    <td><form:input path="last_name" required="required" /></td>
                 </tr>
                   <tr>
                     <td>House no.:</td>
-                    <td><form:input path="house_no" /></td>
+                    <td><form:input path="house_no" required="required" /></td>
                 </tr>
                   <tr>
                     <td>gender:</td>
@@ -65,21 +65,21 @@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
                
                  <tr>
                     <td>street:</td>
-                    <td><form:input path="street" /></td>
+                    <td><form:input path="street" required="required" /></td>
                 </tr>
                
                  <tr>
                     <td>city:</td>
-                    <td><form:input path="city" /></td>
+                    <td><form:input path="city" required="required" /></td>
                 </tr>
                
                  <tr>
                     <td>Pincode:</td>
-                    <td><form:input type="number" path="pincode" /></td>
+                    <td><form:input type="number" path="pincode" required="required" min="0"/></td>
                 </tr>
                  <tr>
                     <td>Date of Birth:</td>
-                    <td><form:input type="date" path="DOB" /></td>
+                    <td><form:input type="date" path="DOB" required="required" /></td>
                 </tr>
                
                
@@ -90,5 +90,6 @@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
             </table>
         </form:form>
     </div>
+   
 </body>
 </html>

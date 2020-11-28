@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.example.demo.DAO.Bankdetail_DAO;
 import com.example.demo.DAO.Bill_DAO;
 import com.example.demo.DAO.BookingDAO;
 import com.example.demo.DAO.Coupan_DAO;
@@ -30,6 +31,7 @@ import com.example.demo.DAO.RoomDAO;
 import com.example.demo.DAO.Room_ServiceDAO;
 import com.example.demo.DAO.Salary_DAO;
 import com.example.demo.DAO.UserDAO;
+import com.example.demo.models.Bank_Details;
 import com.example.demo.models.Employee;
 import com.example.demo.models.Employee_email;
 import com.example.demo.models.Employee_phone;
@@ -52,7 +54,8 @@ public class EmployeeController {
 	
 	@Autowired
 	private SecurityService securityService;
-
+	@Autowired
+	private Bankdetail_DAO bankdetaildao;
 	@Autowired
 	private RoomDAO roomdao;
 	@Autowired
@@ -129,11 +132,21 @@ public class EmployeeController {
 	@RequestMapping(value={"/foodorders/order_no"},method=RequestMethod.POST)
 	public String foodordersbyid(@RequestParam("order_no") int id,ModelMap m,HttpSession session,Principal principal)
 	{	
-		Food_orders food= foodorderdao.getFood_OrderByID(id);
-		food.setItems(foodorderitemdao.getAllorderitems(food.getOrder_No()));
-		
 		List<Food_orders> orders=new ArrayList<>();
-		orders.add(food);
+		try{
+			Food_orders food= foodorderdao.getFood_OrderByID(id);
+			food.setItems(foodorderitemdao.getAllorderitems(food.getOrder_No()));
+			
+			
+			orders.add(food);
+		
+		}
+		catch(Exception e)
+		{
+			m.addAttribute("message", "no such order");
+		}
+		
+		
 		
 		m.addAttribute("orders",orders);
 
@@ -195,12 +208,52 @@ public class EmployeeController {
 		List<Employee_email> emails= employeedao.getallemails(id);
 		List<Employee_phone> nums = employeedao.getallnums(id);
 		
+		String bank_id=emp.getBank_reference_no();
+		
+		if(bank_id==null)
+		{
+			Bank_Details bank= new Bank_Details();
+			m.addAttribute("bankdetail",bank);
+			
+			
+		}
+		else
+		{
+			Bank_Details bank1=bankdetaildao.getBankByID(bank_id);
+			m.addAttribute("bankdetail",bank1);
+		}
+			
+		
 		
 		m.addAttribute("emails",emails);
 		m.addAttribute("nums",nums);
 
 		
 		return "Profile";				
+		
+	}
+	@RequestMapping(value={"profile/bankdetail"},method=RequestMethod.POST)
+	public String addbank(@ModelAttribute("bankdetail") Bank_Details bank,ModelMap m,HttpSession session,Principal principal)
+	{	String id=principal.getName();
+	if(bank.getBank_id()==null)
+	{
+	    
+		bank.setBank_id(bank.getBank_Name()+'_'+bank.getAccount_Number());
+		try {
+		bankdetaildao.save(bank);
+		}
+		catch(Exception e)
+		{
+			
+		}
+		employeedao.updatebank(id, bank.getBank_id());
+	}
+	else {
+		bankdetaildao.update(bank);
+
+	}
+	  
+		return "redirect:/employee/profile";				
 		
 	}
 	@RequestMapping(value={"/profile/addnum"},method=RequestMethod.POST)

@@ -26,6 +26,7 @@ import com.example.demo.DAO.Food_orders_DAO;
 import com.example.demo.DAO.Invoice_DAO;
 import com.example.demo.DAO.Payment_DAO;
 import com.example.demo.DAO.RoomDAO;
+import com.example.demo.models.Allotment_list;
 import com.example.demo.models.Bill;
 import com.example.demo.models.Booking;
 import com.example.demo.models.Coupon;
@@ -66,7 +67,10 @@ public class Food_OrderController {
 		
 		Food_orders foodorder=new Food_orders();
 		List<Food_item> items= fooditemdao.getallFood_item();
+		List <Allotment_list> roominfo= roomdao.getroomsbycust_id(principal.getName()); 
 		
+
+		m.addAttribute("roominfo",roominfo);
 		m.addAttribute("products",items);
 		session.setAttribute("Order",foodorder);
 		
@@ -80,6 +84,10 @@ public class Food_OrderController {
 		foodorder.addItem(id,price);
 		
 		List<Food_item> items= fooditemdao.getallFood_item();
+	List <Allotment_list> roominfo= roomdao.getroomsbycust_id(principal.getName()); 
+		
+
+		m.addAttribute("roominfo",roominfo);
 		
 		m.addAttribute("products",items);
 		
@@ -95,6 +103,10 @@ public class Food_OrderController {
 		
 		foodorder.removeItem(id);
 		List<Food_item> items= fooditemdao.getallFood_item();
+	List <Allotment_list> roominfo= roomdao.getroomsbycust_id(principal.getName()); 
+		
+
+		m.addAttribute("roominfo",roominfo);
 		
 		m.addAttribute("products",items);
 		
@@ -148,6 +160,10 @@ public class Food_OrderController {
 		bill.setOrder_No(foodorder.getOrder_No());
 		bill.setPrice(foodorder.getTotal_Price());
 		bill.setBill_No(bill_no);
+	List <Allotment_list> roominfo= roomdao.getroomsbycust_id(principal.getName()); 
+		
+
+		m.addAttribute("roominfo",roominfo);
 		
 		
 		
@@ -155,7 +171,7 @@ public class Food_OrderController {
 		{
 			Payment payment= new Payment();
 			
-			String customer_id= bookingdao.getcustomerIDbyroom_id(booking_id);
+			String customer_id= bookingdao.getcustomerIDbybooking_id(booking_id);
 
 			List<Coupon> coupons=coupondao.getCouponByCustID(customer_id);
 			coupons.addAll(coupondao.getvalidcoupon(new Date(System.currentTimeMillis())));
@@ -199,7 +215,10 @@ public class Food_OrderController {
 		 Payment payment= (Payment) session.getAttribute("payment");
 		 int temp_price=  (int) session.getAttribute("total_price");
 		 int total_price=bill.getPrice();
-		
+			List <Allotment_list> roominfo= roomdao.getroomsbycust_id(principal.getName()); 
+			
+
+			model.addAttribute("roominfo",roominfo);
 
 		
 		
@@ -249,7 +268,7 @@ public class Food_OrderController {
 		payment.setBill_no(bill.getBill_No());
 		payment.setDate(new Date(System.currentTimeMillis()));
 		payment.setTime(java.sql.Time.valueOf(LocalTime.now()));
-		payment.setPayment_id(payment.getCustomer_id()+"_"+payment.getTime());
+		payment.setPayment_id(payment.getCustomer_id()+"_"+payment.getTime()+"_"+payment.getBooking_id());
 		
 		billdao.save(bill);
 		

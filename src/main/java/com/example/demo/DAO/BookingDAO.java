@@ -6,6 +6,7 @@ import java.sql.Time;
 import java.time.LocalDate;
 import java.sql.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -27,7 +28,8 @@ import com.example.demo.models.Room_type;
 @Repository
 public class BookingDAO {
 	 @Autowired
-	    JdbcTemplate template;
+	 JdbcTemplate template;
+	
 	 @Autowired
 	 RoomDAO roomdao;
 	   
@@ -49,7 +51,8 @@ public class BookingDAO {
 		
 	   }
 
-	   public List<Booking> getbooksql(String sql){
+	   public List<Booking> getbooksql(String sql)
+	   {
 	        return template.query(sql, new RowMapper<Booking>() {
 	            @Override
 	            public Booking mapRow(ResultSet rs, int i) throws SQLException {
@@ -68,7 +71,9 @@ public class BookingDAO {
 	                return e;
 	            }
 	        });
-	        		}
+	   
+	   }
+	   
 	   public List<Room_booking> getRoom_booksql(String sql){
 	        return template.query(sql, new RowMapper<Room_booking>() {
 	            @Override
@@ -95,35 +100,37 @@ public class BookingDAO {
 	        return template.update(sql);
 	    }
 	   public List<Room_type> RoomAvailByDates(Date startdate,Date enddate){
+	       System.out.println(startdate+" "+enddate);
 	       
-//		   String sql1="select * from Room_booking where end_date<="+enddate+"and end_date>="+startdate+ " UNION ";
-		   String sql2="select * from Room_booking where start_date <="+enddate+" and start_date >="+startdate +";";
+		   String sql1="select * from Room_booking where end_date <= '"+enddate+"' and end_date >= '" +startdate+"' and start_date <='"+startdate+"';";
+		   String sql3="select * from Room_booking where start_date <= '"+enddate+"' and start_date >= '"+startdate +"' and end_date > '"+enddate+"';";
+		   String sql2="select * from Room_booking where start_date >= '"+startdate+"' and end_date <= '"+enddate +"';";
+		   String sql4="select * from Room_booking where start_date <= '"+startdate+"' and end_date >= '"+enddate +"';";
 		   System.out.println(sql2);
 //		   sql1=sql1 + sql2;
 		   List <Room_type> ans= roomdao.getallroomtypes();
 		   System.out.println("got rooms :"+ ans.size());
 		   
-		   List<Room_booking> book= template.query(sql2, new RowMapper<Room_booking>(){
-			   @Override
-	            public Room_booking mapRow(ResultSet rs, int i) throws SQLException {
-	                Room_booking e=new Room_booking();
-	                e.setPriviledge_level(rs.getInt("priviledge_level"));
-	                e.setStart_date(rs.getDate("start_date"));
-	                e.setEnd_date(rs.getDate("end_date"));
-	               
-	      
-	                return e;
-	            }
-		   });
+		   List<Room_booking> book= getRoom_booksql(sql1);
+		   
+		   book.addAll(getRoom_booksql(sql2));
+		   book.addAll(getRoom_booksql(sql3));
+		   book.addAll(getRoom_booksql(sql4));
+		   HashSet <Room_booking> hbook = new HashSet <Room_booking>(book) ;
+
 			System.out.println(book.size());
+			System.out.println(hbook.size());
+		   book.clear();
+		   book.addAll(hbook);
+		  
 		   
 		   LocalDate sd = startdate.toLocalDate();
-		   LocalDate ed = startdate.toLocalDate();
+		   LocalDate ed = enddate.toLocalDate();
+		   System.out.println(sd +" "+ sd.plusDays(1));
 		   
-
+		
 		   for(int j=0;j<ans.size();j++)
 			{ int val=1000;
-			System.out.println("loop: "+ j);
 			  
 			   for(LocalDate j1=sd;j1.compareTo(ed)<=0;j1=j1.plusDays(1))
 			   {int temp=0;
@@ -136,7 +143,7 @@ public class BookingDAO {
 				   LocalDate e= book.get(i).getEnd_date().toLocalDate();
 				   if(j1.compareTo(s)>=0&&j1.compareTo(e)<=0)
 				   {
-					   if(book.get(i).getPriviledge_level()==j)
+					   if(book.get(i).getPriviledge_level()==j+1)
 						   temp += book.get(i).getCount();
 						   
 						   
@@ -180,6 +187,10 @@ public class BookingDAO {
 	        String sql="select * from Booking where Start_Date="+Start_Date;
 	        return getbooksql(sql);
 	    }
+	   public List<Booking> getactiveBookingByDate(Date Date){
+	        String sql="select * from Booking where Start_Date <= '"+Date +"' and end_date >='"+Date+"';";
+	        return getbooksql(sql);
+	    }
 	   public List<Booking> getallBookings(){
 	        String sql="select * from Booking";
 	        return getbooksql(sql);
@@ -202,7 +213,7 @@ public class BookingDAO {
 	        return template.queryForObject(sql,String.class);
 		}
 		
-		public String getcustomerIDbyroom_id(String booking_id)
+		public String getcustomerIDbybooking_id(String booking_id)
 		{
 			String sql = "select cust_id from Booking where booking_id='"+booking_id+"';";
 			
@@ -210,11 +221,15 @@ public class BookingDAO {
 	        return template.queryForObject(sql,String.class);
 		}
 		
-		public int setRoomNoforBooking(String Booking_id,String Room_no)
+		public int setRoomNoforBooking(String Booking_id,String Room_no,String cust_id)
 		{
 			String  sql="insert into books values ('"+Booking_id+"','"+Room_no+"');";
+			String sql1="insert into Allotted_to values('"+cust_id+"','"+Room_no+"');";
 			String sql2="update Room set status='booked' where room_no='"+Room_no+"';";
-		 template.update(sql);
+		   
+		
+			template.update(sql);
+			template.update(sql1);
 			return template.update(sql2);
 			
 		}
@@ -222,8 +237,12 @@ public class BookingDAO {
 		{
 			String  sql="delete from books where room_id='"+Room_no+"';";
 
+			String  sql1="delete from Allotted_to where room_id='"+Room_no+"';";
+
+
 			String sql2="update Room set status='free' where room_no='"+Room_no+"';";
-		   template.update(sql);
+			template.update(sql1);
+		    template.update(sql);
 			return template.update(sql2);
 			
 		}
@@ -235,6 +254,7 @@ public class BookingDAO {
 			for(int i=0;i<rooms.size();i++)
 			{
 				freeRoomNoforBooking(rooms.get(i).getRoom_no());
+				
 				
 			}
 

@@ -63,6 +63,21 @@ public class Booking {
 	this.rooms=room;
 		
 	}
+	public int roomcount(int id)
+	{
+		for(int i=0;i<rooms.size();i++)
+		{
+			if(rooms.get(i).getPriviledge_level()==id)
+			{
+				return rooms.get(i).getCount();
+				
+							
+			}
+		}
+		return 0;
+	
+		
+	}
 	public void addRooms(Room_booking room) {
 	
 		for(int i=0;i<rooms.size();i++)

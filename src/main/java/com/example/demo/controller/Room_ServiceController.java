@@ -16,7 +16,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.example.demo.DAO.Food_ItemDAO;
+import com.example.demo.DAO.Food_orders_DAO;
+import com.example.demo.DAO.Payment_DAO;
+import com.example.demo.DAO.RoomDAO;
 import com.example.demo.DAO.Room_ServiceDAO;
+import com.example.demo.models.Allotment_list;
 import com.example.demo.models.Booking;
 import com.example.demo.models.Room_Service;
 import com.example.demo.models.User;
@@ -28,6 +33,17 @@ public class Room_ServiceController {
 	Room_ServiceDAO roomservicedao;
 	@Autowired
 	private UserService userservice;
+
+	@Autowired
+	private Food_ItemDAO fooditemdao;
+	@Autowired
+	private Food_orders_DAO foodorderdao;
+	
+	@Autowired
+	private Payment_DAO paymentdao;
+	@Autowired
+	private RoomDAO roomdao;
+	
 	
 	@RequestMapping(value={"/customer/room_s/create/","/admin/room_s/create/"},method=RequestMethod.GET)
 	public String custroomservice(Model m,HttpSession session,Principal principal)
@@ -35,9 +51,12 @@ public class Room_ServiceController {
 		System.out.println("here");
 		
 		User user= userservice.findByUsername(principal.getName());
+		List <Allotment_list> roominfo= roomdao.getroomsbycust_id(principal.getName()); 
+		
 		Room_Service rs= new Room_Service();
 		m.addAttribute("roomservicedetail",rs );
 		m.addAttribute("requesterrole",user.getRole());
+		m.addAttribute("roominfo",roominfo);
 	
 		
 		return "createRoomService";

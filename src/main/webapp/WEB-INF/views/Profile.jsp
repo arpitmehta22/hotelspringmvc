@@ -102,7 +102,7 @@ uri = "http://java.sun.com/jsp/jstl/fmt" %>
             <h3>Current Address</h3>
 
             <form action="profile" method="post" name="profile" >
-         <fieldset disabled>
+            <fieldset disabled>
                 <input
                   type="hidden"
                   name="${_csrf.parameterName}"
@@ -187,16 +187,23 @@ uri = "http://java.sun.com/jsp/jstl/fmt" %>
                   />
                 </div>
                
-             
+             <c:if test="${empty foreign}">
                 <button type="submit" class="btn btn-primary">Update</button>
+                </c:if>
               </fieldset>
+              
+             <c:if test="${empty foreign}">
               <button class="my-3 btn btn-danger toggle_edit">
                 Enable Edit
               </button>
+              </c:if>
             </form>
           </div>
           
       </div>
+      
+               
+             <c:if test="${empty foreign}">
       <div class="row">
          <div class="col card p-4 m-1">
             <h3> Add Phonenumber</h3>
@@ -215,17 +222,16 @@ uri = "http://java.sun.com/jsp/jstl/fmt" %>
                   <label for="number"> Phone Number </label>
                    <input
                  path="number"
-                  type="number"
-           
+                  type="text"
+           		pattern="[0-9]{10}"
               
                   id="number"
                   name="number"
                 />
-             
-               
+             </div>
              
                 <button type="submit" class="btn btn-primary">add</button>
-          
+        
             </form>
           </div>
             <div class="col card p-4 m-1">
@@ -251,16 +257,16 @@ uri = "http://java.sun.com/jsp/jstl/fmt" %>
                   name="email"
                 />
              
-               
+               </div>
              
                 <button type="submit" class="btn btn-primary">add</button>
-          
+       
             </form>
         
           </div>
         
         </div>
-        
+          </c:if>
        <div class="container">
        <h2 align="center"> Phone Numbers</h2>
        
@@ -291,10 +297,12 @@ uri = "http://java.sun.com/jsp/jstl/fmt" %>
                   name="number"
                 />
              
+               </div>
                
+             <c:if test="${empty foreign}">
              
                 <button type="submit" class="btn btn-primary">Remove</button>
-          
+          </c:if>
             </form>
 		    
 		 </div>
@@ -307,6 +315,7 @@ uri = "http://java.sun.com/jsp/jstl/fmt" %>
 				
 				</div>  
 				</div>
+				
 				<div class="container">
 				
        <h2 align="center">  Emails</h2>
@@ -338,10 +347,12 @@ uri = "http://java.sun.com/jsp/jstl/fmt" %>
                   name="email"
                 />
              
-               
+               </div>
+              
+             <c:if test="${empty foreign}">
              
                 <button type="submit" class="btn btn-primary">Remove</button>
-          
+          </c:if>
             </form>
 		    
 		    
@@ -356,6 +367,89 @@ uri = "http://java.sun.com/jsp/jstl/fmt" %>
 				
 				</div>  
 				</div>
+	<div class="container">
+				
+	<div class="row">
+      <div class="col card p-4 m-1">
+            <h3> Bank Detail</h3>
+
+            <form action="profile/bankdetail" method="post" name="bankdetail" >
+            <fieldset disabled>
+                <input
+                  type="hidden"
+                  name="${_csrf.parameterName}"
+                  value="${_csrf.token}"
+                  readonly
+                />
+                    
+            
+        
+
+                <div class="form-group">
+                
+                  <label for="Bank_Name"> Bank Name </label>
+                   <input
+               
+                  type="text"
+                  value="${bankdetail.bank_Name}"
+          
+                  id="Bank_Name"
+                  name="Bank_Name"
+                  required
+                />
+                <input
+               
+                  type="hidden"
+                  value="${bankdetail.bank_id}"
+                  readonly
+                  id="Bank_id"
+                  name="Bank_id"
+                />
+              </div>
+                
+                <div class="form-group">
+                  <label for="Account_Number"> Account_Number  </label>
+                  <input
+              
+                  type="text"
+                  value="${bankdetail.account_Number}"
+               
+                  id="Account_Number"
+                  name="Account_Number"
+                  required
+                />
+               </div>
+                <div class="form-group">
+                  <label for="ISFC_Code"> ISFC_Code </label>
+                <input
+                  type="text"
+                  value="${bankdetail.IFSC_Code}"
+                
+                  id="IFSC_Code"
+                  name="IFSC_Code"
+                  required
+            
+                />
+           </div>
+        
+             
+             <c:if test="${empty foreign}">
+                <button type="submit" class="btn btn-primary">Update</button>
+                  </c:if>
+              </fieldset>
+              
+             <c:if test="${empty foreign}">
+              <button class="my-3 btn btn-danger toggle_edit">
+                Enable Edit
+              </button>
+              </c:if>
+           
+            </form>
+  	
+				</div>
+	</div>
+				
+	</div>
 		
         
         
@@ -369,5 +463,6 @@ uri = "http://java.sun.com/jsp/jstl/fmt" %>
         swal("${ response }");
       </script>
     </c:if>
+    
   </body>
 </html>

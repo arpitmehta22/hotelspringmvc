@@ -13,7 +13,7 @@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
     <jsp:include page="include/header.jsp" />
 </div>
 
-<h1>welcome to registration page</h1>
+<h1 align="center" > Payment </h1>
 <div align="center">
 <c:if test="${not empty message}">
 <h2> ${message}</h2>
@@ -50,6 +50,7 @@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 </div>
 
 <div class="jumbotron">
+
 <h4> Total Price : ${total_price}</h4>
         <form action="generate_invoice" method="post">
             <table border="0">
@@ -58,15 +59,15 @@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
                 </tr>
                 <tr>
                     <td>Card No:</td>
-                    <td><input path="card_no" /></td>
+                    <td><input path="card_no" required="required" /></td>
                 </tr>
                    <tr>
                     <td>CVV:</td>
-                    <td><input path="cvv" /></td>
+                    <td><input path="cvv" required="required" type="text" name="cvv" pattern="[0-9]{3}" maxlength="3"/></td>
                 </tr>
                 <tr>
                     <td>pin:</td>
-                      <td><input path="pin" /></td>
+                      <td><input path="pin" required="required" min="0" type="text" name="pin" pattern="[0-9]{4}" maxlength="4"/></td>
                     <td><password path="password" /></td>
                     
                     
@@ -81,5 +82,8 @@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
         </form>
         </div>
     </div>
+    <div id="footer">
+    <jsp:include page="include/footer.jsp" />
+</div>
 </body>
 </html>

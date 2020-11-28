@@ -11,19 +11,34 @@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <title> Landmark Hotel</title>
 </head>
 <body>
+
 <div id="header">
     <jsp:include page="include/header.jsp" />
 </div>
 
-<div class="jumbotron"><h1>Welcome to Hotel Landmark</h1></div>
+<div class="jumbotron"><h1 align="center">Welcome to Hotel Landmark</h1></div>
 
-<div class="jumbotron">
-<h2> About us</h2>
-<p>Landmark Hotel is a 3-star hotel in saharanpur with various fine quality services. 
+<div class="jumbotron dark">
+<h2 align="center"> About us</h2>
+<p align="center">Landmark Hotel is a 3-star hotel in saharanpur with various fine quality services. 
 It is situated at a distance of less than 500 meters from both railway station and the bus stand and . 
 It has a wide range of rooms , halls and a fine dine restaurant . 
 It is known for it’s quality environment and awesome food.
- This hotel opened recently and is planning to bring much more facilities for its customers and staff. </p></div>
+ This hotel opened recently and is planning to bring much more facilities for its customers and staff. </p>
+ 
+ <!-- Jumbotron -->
+<div class="jumbotron" align="center">
+<hr>
+  <img src="/Images/landmark.jpeg" />
+
+  <img src="/Images/landmarkrec.jpeg" />
+  <hr>
+  </div>
+
+</div>
+<!-- Jumbotron -->
+ 
+ </div>
 
 <div class="jumbotron">
 <h2 align="center"> Feedbacks</h2>
@@ -49,7 +64,9 @@ It is known for it’s quality environment and awesome food.
 
 </div>
 </div>
-
+<div id="footer">
+    <jsp:include page="include/footer.jsp" />
+</div>
 
 </body>
 </html>
